@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="main_style.css" />
+</head>
+<body>
+    <section class="showcase">    
+        <header>
+          <h2 class="logo"> Road Safe</h2>
+          <div class="toggle"></div>
+        </header>
+        <video src="main_media/heheheheeee.mp4" muted loop autoplay></video>
+        <div class="overlay"></div>
+        <div class="text">
+          <h2>Say Hello to </h2> 
+          <h3>Exploring Road Safety</h3>
+          <p>Mind on the drive, Hands on the wheels, Eyes on the road</p>
+          <a href="/about/index.html">Explore</a>
+        </div>
+        <ul class="social">
+          <li><a href="#"><img src=""></a></li>
+          <li><a href="#"><img src=""></a></li>
+          <li><a href="#"><img src=""></a></li>
+        </ul>
+      </section>
+      <div class="menu">
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="/about/index.html">About</a></li>
+          <li><a href="/sound/index.html">Audio</a></li>
+          <li><a href="/working_doodle/index.html">Doodle</a></li>
+          <li><a href="/roadsign/index.html">Road Signs</a></li>
+          <li><a href="/traffic_hand_signals/index.html">Traffic Hand Signals</a></li>
+          <li><a href="#">Sign up</a></li>
+        </ul>
+      </div>   
+<script>
+  const menuToggle = document.querySelector('.toggle');
+const showcase = document.querySelector('.showcase');
+
+menuToggle.addEventListener('click', () => {
+  menuToggle.classList.toggle('active');
+  showcase.classList.toggle('active');
+})
+</script>
+</body>
+</html>
