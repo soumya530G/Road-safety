@@ -41,4 +41,4 @@ Soumya Gupta <br>
 [Twitter](https://twitter.com/@SoumyaG22868897), [Github](https://github.com/soumya530G),
 [Linkedin](https://www.linkedin.com/in/soumya-gupta-595a52208/)  
 Email: soumyamns002@gmail.com <br>  
-Project Link: [https://github.com/soumya530G/stockswebsite.git](https://github.com/soumya530G/Road-safety/) <br>
+Project Link:https://github.com/soumya530G/Road-safety/ <br>
