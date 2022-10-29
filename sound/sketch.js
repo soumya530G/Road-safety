@@ -5,8 +5,8 @@ let classifier;
 let label = 'loading please wait...';
 
 // Teachable Machine model URL:
-let soundModel = 'https://teachablemachine.withgoogle.com/models/TSkJ0WNNj/';
-
+let soundModel = 'https://teachablemachine.withgoogle.com/models/yhpoqLOvM/';
+//https://teachablemachine.withgoogle.com/models/TSkJ0WNNj/
 
 function preload() {
   // Load the model

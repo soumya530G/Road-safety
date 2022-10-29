@@ -1,124 +1,63 @@
-//we're starting with posenet ml model, we're sending image as an input into that model
-//the posenet model does a pose estimation, guess
-//all those keypoints comes in pairs, as coordinates, 17 pairs in all
-//that data is what we want to send in as input to our ml5 neural network 
-//ml5 neural network would take it as an input and classify them into whatever poses we want 
+// Add some header info
+// For TM template code
 
+// Video - is a single variable 
 let video;
-let poseNet;
-let pose;
-let skeleton;
-let brain;
-let state = 'waiting';
-let targetLabel;
-function keyPressed(){
-    //now let's add a function to save the data 
-    if(key == 's'){
-        brain.saveData();
-    } else {
-    targetLabel = key;
-    console.log(targetLabel);
-    //executes a fucntion after a set amount of time
-    setTimeout(function(){
-        console.log('collecting');
-        state = 'collecting'; 
-   
-        setTimeout(function(){
-            console.log('not collecting');
-            state = 'waiting';        
-    
-        }, 10000);
+let label = "waiting";
+let classifier; //variable that stores the model
 
-    }, 10000);
+// STEP 1: Load the model!
+//will load any important assets, images, data files, models before the program starts in setup 
+function preload(){
+    //we set classifier = ml5.image classifier 
+    classifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/diaFgLPD0/');
 }
-}
-function setup(){
-         createCanvas(640, 480);
-         video = createCapture(VIDEO);
-         video.hide();
-       poseNet = ml5.poseNet(video, modelLoaded); //we're referencing ml5 library.the name of function 
-       //poseNet works differently than ml5.js library, it works based on event handlers 
-        //so if I want to set up a pose event by calling this method "on", on pose I want this function to execute, whenever thise posenet model detects a pose, then call this function and give me the results of that pose
-         poseNet.on('pose', gotPoses)
-         //here's how to congifure neural network we'll use 4 properities here
-         let options = {
-            inputs: 34,
-            outputs: 4,
-            task: 'classification',
-            debug: true
-         }
-         brain = ml5.neuralNetwork(options);
-         brain.loadData('data.json', dataReady);
-          console.log('data loaded');
-         //we need to add data to our neural network
-}
- 
- function dataReady(){
-//     //call normalize data 
-//  console.log('data normaliz call');
-//     brain.normalizeData();
-//      console.log('data normalized');
-//     //running thru all the datat ten times 
-    brain.train({epochs: 100}, finished); 
-//     console.log('data trained');
- }
-
- function finished(){
-    console.log('model trained');
-     brain.save();
-     console.log('data saved');
- }
-
-function gotPoses(poses){
-    //     console.log(poses);
-         //if the length of the array is zero, 
-        if(poses.length > 0){
-             //save first pose in a global variable 'pose'
-           pose = poses[0].pose;
-          skeleton = poses[0].skeleton;
-          //want to have data in a plain array
-          //going through a pose, get the data, putting them in an array
-          if(state == 'collecting'){
-          let inputs = [];
-          for(let i = 0; i < pose.keypoints.length; i++){
-            let x = pose.keypoints[i].position.x;
-            let y = pose.keypoints[i].position.y;
-            inputs.push(x);
-            inputs.push(y);
-            }
-            //target also wants an array but here it's just a label, so we can tkae the target label put it in the array and that's
-            //what we're giving an add data function  
-            let target = [targetLabel];
-          brain.addData(inputs, target);
-        }
-        }
-    }
-    
-  function modelLoaded(){
-    console.log('poseNet ready');
-  } 
-
-  function draw(){
-    translate(video.width, 0);
-    scale(-1, 1);
-    image(video, 0, 0, video.width, video.height);
-    if(pose){
-        for(let i = 0; i < skeleton.length; i++){
-       let a = skeleton[i][0];
-       let b = skeleton[i][1];
-        strokeWeight(2);
-        stroke(0);
-        line(a.position.x, a.position.y, b.position.x, b.position.y); 
-        }
-    
-    for(let i = 0; i < pose.keypoints.length; i++){
-        let x = pose.keypoints[i].position.x;
-        let y = pose.keypoints[i].position.y;
-        fill(0);
-        stroke(255);
-        ellipse(x, y, 16, 16);
-        }
-  }
+//we connect to capture device (webcam) in setup 
+function setup() {
+  //background(100);
+  createCanvas(900, 600);
+ // canvas.parent('sketch-holder');
+  // Create the video
+  video = createCapture(VIDEO);
+  video.size(1000, 1000);
+  video.hide();
+  
+  // STEP 2: Start classifying
+  classifyVideo();
 }
 
+// STEP 2 classify!
+function classifyVideo(){
+//the function in ml5 to classify an image is called "classify"
+//first argument to the classify function that we need to hand to it, is the image that we want to classify that's the video
+//JavaScript works asynchornously i.e it takes time to classify the image in the video and it's going to report an event back once it's finished 
+//and we need to handle that by giving it the name of a function that's going to get called as a callback, let's call that function got results  
+classifier.classify(video, gotResults);
+}
+//we draw the video on canvas
+function draw() {
+ // background(100);
+  
+  // Draw the video
+  image(video, 100, 0, 1000, 1000);
+  video.size(1, 1);
+  textSize(32);
+  fill(255);
+  textAlign(CENTER, CENTER);
+  text(label, width/2, height - 16);
+  // STEP 4: Draw the label
+}
+//when the prgoram starts we said classify, then we pass it in the video then we get the result, we add the result into the canvas and then we need to classify again   
 
+// STEP 3: Get the classification!
+//can receive either an error or some correct results, so error goes first and result goes second  
+function gotResults(error, results){
+if(error){
+    console.error(error);
+    return;
+}
+//store the result in the label variable
+label = results[0].label;
+classifyVideo();
+//console.log(results[0].label);
+}
